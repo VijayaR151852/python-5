@@ -1,186 +1,133 @@
-#
-
-import time
 import random
-import sys
+import time
+    
+    
+class game_start:
+    sleep_between_actions = 1
+    list_of_snakes = {17:10,54:20,62:43,64:4,87:63,93:20,95:20,99:21}
+    list_of_ladders = {4:10,9:22,20:18,28:56,40:19,51:16,63:18,71:20}
+    fscore = 0
+    sscore = 0
+    def __init__(self,fname="user_1",sname="user_2"):
+        self.fname = fname
+        self.sname = sname
+        self.fname_score = 0
+        self.sname_score = 0
+        self.count_1 = 0
+        self.count_2 = 0
+        self.c = 0
+      #  print( '''~~~~~~~~>WELCOME TO SNAKE AND LADDER ###
+       # @@==========================@@
+                                         
+       # Rules :
+        #------   
+        #    1. If The player will get 6 at starting then only he will enter the game.
+        #    2. If the player get exact 100 points then only player wins.
+        #    3. when you will get snake your score will decrease based on the snake.
+        #    4. when you will get ladder your score will increase based on the ladder.
+            
+            
+            
+         #   ''')
+            
+        print("**** MATCH PLAYERS BETWEEN {} AND {} ***".format(self.fname,self.sname))
 
-# just of effects. add a delay of 1 second before performing any action
-SLEEP_BETWEEN_ACTIONS = 1
-MAX_VAL = 100
-DICE_FACE = 6
-
-# snake takes you down from 'key' to 'value'
-snakes = {
-    8: 4,
-    18: 1,
-    26: 10,
-    39: 5,
-    51: 6,
-    54: 36,
-    56: 1,
-    60: 23,
-    75: 28,
-    83: 45,
-    85: 59,
-    90: 48,
-    92: 25,
-    97: 87,
-    99: 63
-}
-
-# ladder takes you up from 'key' to 'value
-ladders = {
-    3: 20,
-    6: 14,
-    11: 28,
-    15: 34,
-    17: 74,
-    22: 37,
-    38: 59,
-    49: 67,
-    57: 76,
-    61: 78,
-    73: 86,
-    81: 98,
-    88: 91
-}
-
-player_turn_text = [
-    "Your turn.",
-    "Go.",
-    "Please proceed.",
-    "Lets win this.",
-    "Are you ready?",
-    "",
-]
-
-snake_bite = [
-    "boohoo",
-    "bummer",
-    "snake bite",
-    "oh no",
-    "dang"
-]
-
-ladder_jump = [
-    "woohoo",
-    "woww",
-    "nailed it",
-    "oh my God...",
-    "yaayyy"
-]
-
-'''
-def welcome_msg():
-    msg = """
-    Welcome to Snake and Ladder Game.
-    Version: 1.0.0
-    Developed by: https://www.pythoncircle.com
-
-    Rules:
-      1. Initally both the players are at starting position i.e. 0. 
-         Take it in turns to roll the dice. 
-         Move forward the number of spaces shown on the dice.
-      2. If you lands at the bottom of a ladder, you can move up to the top of the ladder.
-      3. If you lands on the head of a snake, you must slide down to the bottom of the snake.
-      4. The first player to get to the FINAL position is the winner.
-      5. Hit enter to roll the dice.
-
-    """
-    print(msg)
-'''
-
-def get_player_names():
-    player1_name = None
-    while not player1_name:
-        player1_name = 'rambo'#input("Please enter a valid name for first player: ").strip()
-
-    player2_name = None
-    while not player2_name:
-        player2_name = 'rams'#input("Please enter a valid name for second player: ").strip()
-
-    print("\nMatch will be played between '" + player1_name + "' and '" + player2_name + "'\n")
-    return player1_name, player2_name
-
-
-def get_dice_value():
-    time.sleep(SLEEP_BETWEEN_ACTIONS)
-    dice_value = random.randint(1, DICE_FACE)
-    print("Its a " + str(dice_value))
-    return dice_value
-
-
-def got_snake_bite(old_value, current_value, player_name):
-    print("\n" + random.choice(snake_bite).upper() + " ~~~~~~~~>")
-    print("\n" + player_name + " got a snake bite. Down from " + str(old_value) + " to " + str(current_value))
-
-
-def got_ladder_jump(old_value, current_value, player_name):
-    print("\n" + random.choice(ladder_jump).upper() + " ########")
-    print("\n" + player_name + " climbed the ladder from " + str(old_value) + " to " + str(current_value))
-
-
-def snake_ladder(player_name, current_value, dice_value):
-    time.sleep(SLEEP_BETWEEN_ACTIONS)
-    old_value = current_value
-    current_value = current_value + dice_value
-
-    if current_value > MAX_VAL:
-        print("You need " + str(MAX_VAL - old_value) + " to win this game. Keep trying.")
-        return old_value
-
-    print("\n" + player_name + " moved from " + str(old_value) + " to " + str(current_value))
-    if current_value in snakes:
-        final_value = snakes.get(current_value)
-        got_snake_bite(current_value, final_value, player_name)
-
-    elif current_value in ladders:
-        final_value = ladders.get(current_value)
-        got_ladder_jump(current_value, final_value, player_name)
-
-    else:
-        final_value = current_value
-
-    return final_value
-
-
-def check_win(player_name, position):
-    time.sleep(SLEEP_BETWEEN_ACTIONS)
-    if MAX_VAL == position:
-        print("\n\n\nThats it.\n\n" + player_name + " won the game.")
-        print("Congratulations " + player_name)
-        print("\nThank you for playing the game. Please visit https://www.pythoncircle.com\n\n")
-        sys.exit(1)
-
-
-def start():
-    #welcome_msg()
-    time.sleep(SLEEP_BETWEEN_ACTIONS)
-    player1_name, player2_name = get_player_names()
-    time.sleep(SLEEP_BETWEEN_ACTIONS)
-
-    player1_current_position = 0
-    player2_current_position = 0
-
-    while True:
-        ut_1 = input("\n" + player1_name + ": " + random.choice(player_turn_text) + " Hit the enter to roll dice: ")
-        print("\nRolling dice...")
-        dice_value = get_dice_value()
-        time.sleep(SLEEP_BETWEEN_ACTIONS)
-        print(player1_name + " moving....")
-        player1_current_position = snake_ladder(player1_name, player1_current_position, dice_value)
-
-        check_win(player1_name, player1_current_position)
-
-        input_2 = input("\n" + player2_name + ": " + random.choice(player_turn_text) + " Hit the enter to roll dice: ")
-        print("\nRolling dice...")
-        dice_value = get_dice_value()
-        time.sleep(SLEEP_BETWEEN_ACTIONS)
-        print(player2_name + " moving....")
-        player2_current_position = snake_ladder(player2_name, player2_current_position, dice_value)
-
-        check_win(player2_name, player2_current_position)
-
-
+        print('-------------------------------------------------------')
+                                            
+        while(True):
+            
+            first_player_rolling_dice = random.randint(1,6)
+            #print(first_player_rolling_dice)
+            
+            if first_player_rolling_dice == 6:
+                self.count_1 = 1
+            
+        
+            if self.count_1 == 1:
+                #print(self.fname ,'entering the game===============')
+                self.fscore = self.rolling_dice()
+                self.fname_score += self.fscore
+                print('fnamescore is',self.fname_score)
+                
+                if self.fname_score in self.list_of_snakes.keys():
+                    self.fname_score -= self.hitting_snake(self.fname_score)
+                    
+                    print("{} oh!! no ~~~~>snake hitted {}".format(self.fname,self.fname_score))
+                    
+                if self.fname_score in self.list_of_ladders.keys():
+                    self.fname_score += self.climb_ladder(self.fname_score)
+                    
+                    print(" woww {} is on ladder {}".format(self.fname,self.fname_score))
+                    
+                
+                
+            second_player_rolling_dice = random.randint(1,6)
+            
+            #print(second_player_rolling_dice)
+            
+            
+            if second_player_rolling_dice == 6:
+                self.count_2 = 1
+                
+            if self.count_2 == 1:
+                #print(self.sname ,'entering the game===============')
+                self.sscore = self.rolling_dice()
+                self.sname_score += self.sscore
+                print('sname score is',self.sname_score)
+                
+                if self.sname_score in self.list_of_snakes:
+                    self.sname_score -= self.hitting_snake(self.sname_score)
+                    
+                    print("{} oh!! no ~~~~>snake hitted {}".format(self.sname,self.sname_score))
+                    
+                
+                if self.sname_score in self.list_of_ladders:
+                    self.sname_score += self.climb_ladder(self.sname_score)
+                    
+                    print(" woww {} is on ladder {}".format(self.sname,self.sname_score))
+                    
+                
+                
+            if 94 <= self.fname_score and self.fname_score <= 100:
+                if self.fname_score == 100:
+                    print("{} won the match".format(self.fname))
+                    c = 1
+                    break
+                else:
+                    self.fname_score = self.fname_score
+            elif 100 < self.fname_score and self.fname_score <= 105:
+                self.fname_score = self.fname_score - self.fscore
+            
+            if 94 <= self.sname_score and self.sname_score <= 100:
+                if self.sname_score == 100:
+                    print("{} won the match".format(self.sname))
+                    c = 1
+                    break 
+                else:
+                    self.sname_score = self.sname_score
+            elif 100 < self.sname_score and 105 >= self.sname_score:
+                self.sname_score = self.sname_score - self.sscore
+            
+        if c == 1:
+            print(self.fname_score)
+            print(self.sname_score)
+            
+            
+            
+            
+    def rolling_dice(self):
+        time.sleep(self.sleep_between_actions)
+        return random.randint(1,6)
+    
+    def hitting_snake(self,snake_no):
+        return self.list_of_snakes[snake_no]
+        
+    
+    
+    
+    def climb_ladder(self,ladder_no):
+        return self.list_of_ladders[ladder_no]
+        
+        
 if __name__ == "__main__":
-    start()
+    game = game_start('rakesh','mahesh')
